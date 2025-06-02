@@ -1,4 +1,7 @@
+import 'package:chat_app/helpers/mostrar_alerta.dart';
+import 'package:chat_app/services/auth_services.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../widgets/widgets.dart';
 
@@ -37,7 +40,7 @@ class RegisterPages extends StatelessWidget {
   
 
   class _Form extends StatefulWidget {
-    const _Form({super.key});
+    const _Form();
   
     @override
     State<_Form> createState() => __FormState();
@@ -51,6 +54,9 @@ class RegisterPages extends StatelessWidget {
 
     @override
     Widget build(BuildContext context) {
+
+      final authServices = Provider.of<AuthService>(context);
+
       return Container(
         margin: EdgeInsets.only(top: 40),
         padding: EdgeInsets.symmetric(horizontal: 50),
@@ -78,10 +84,18 @@ class RegisterPages extends StatelessWidget {
           isPassword: true,
           ),
   
-            BotonAzul(text: 'Ingrese', onPressed: () {
-              print(emailCtrl.text);
-              print(passwordCtrl.text);
-              },)
+            authServices.autenticando
+            ? BotonAzul(text: 'Crear Cuenta', onPressed:null)
+            : BotonAzul(text: 'Crear Cuenta', onPressed: () async{
+              final registerOk = await authServices.register(nameCtrl.text.trim(), emailCtrl.text.trim(), passwordCtrl.text.trim());
+              
+              if(registerOk == true){
+                //TODO: Conectar al Socket Server
+                Navigator.pushReplacementNamed(context, 'usuarios');
+              } else {
+                mostrarAlerta(context, 'Usuario Ya Registrado', 'El Usuario ya esta Registrad', Colors.white);
+              }
+              }, background: Colors.blue)
           ],
         ),
       );

@@ -7,7 +7,7 @@ final Map<String, Widget Function(BuildContext)> appRoutes = {
   'usuarios':  ( _ ) => UsuariosPages(),
   'chat': ( _ ) => ChatPages(),
   'login': ( _ ) => LoginPages(),
-  'loading': ( _ ) => LoadingPages(),
+  'loading': ( _ ) => LoadingPage(),
   'register': ( _ ) => RegisterPages(),
 
 };

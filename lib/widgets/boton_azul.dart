@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 
 class BotonAzul extends StatelessWidget {
   final String text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
+  final Color? background;
 
   const BotonAzul({
     Key? key,
     required this.text,
-    required this.onPressed,
+    this.onPressed, 
+    this.background,
   }) : super(key: key);
 
   @override
@@ -16,7 +18,7 @@ class BotonAzul extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         elevation: 2,
         shadowColor: Colors.black,
-        backgroundColor: Colors.blue, // reemplaza 'primary'
+        backgroundColor: background, // reemplaza 'primary'
         foregroundColor: Colors.white, // reemplaza 'onPrimary'
         shape: const StadiumBorder(),
         minimumSize: const Size(double.infinity, 55),

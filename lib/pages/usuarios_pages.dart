@@ -1,7 +1,9 @@
+import 'package:chat_app/models/usuario.dart';
+import 'package:chat_app/services/auth_services.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-import '../models/usuario.dart';
 
 class UsuariosPages extends StatefulWidget {
   const UsuariosPages({super.key});
@@ -15,21 +17,29 @@ class _UsuariosPagesState extends State<UsuariosPages> {
   RefreshController _refreshController = RefreshController(initialRefresh: false);
 
   final usuarios = [
-    Usuario(online: true, email: 'test1@gmail.com', nombre: 'Brian', uid: '1'),
-    Usuario(online: false, email: 'test2@gmail.com', nombre: 'Enric', uid: '2'),
-    Usuario(online: true, email: 'test3@gmail.com', nombre: 'Andrade', uid: '3')
+    Usuario(online: true, correo: 'test1@gmail.com', nombre: 'Brian', uid: '1'),
+    Usuario(online: false, correo: 'test2@gmail.com', nombre: 'Enric', uid: '2'),
+    Usuario(online: true, correo: 'test3@gmail.com', nombre: 'Andrade', uid: '3')
   ];
 
   @override
   Widget build(BuildContext context) {
+
+    final authService = Provider.of<AuthService>(context);
+    final usuario = authService.usuario;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(221, 20, 23, 221),
-        title: Text('Mi Nombre', style: TextStyle(color: Colors.white),),
+        title: Text(usuario!.nombre, style: TextStyle(color: Colors.white),),
         elevation: 1,
       centerTitle: true,
       leading: IconButton(
-        onPressed: () {}, 
+        onPressed: () {
+          //TODO: Desconectar el Socket Server
+          Navigator.pushReplacementNamed(context, 'login');
+          AuthService.deleteToken();
+        }, 
         icon: Icon(Icons.exit_to_app, color: Colors.white)),
       actions: [
         Container(
@@ -64,7 +74,7 @@ class _UsuariosPagesState extends State<UsuariosPages> {
   ListTile _usuariosListTile(Usuario usuario) {
     return ListTile(
         title: Text(usuario.nombre),
-        subtitle: Text(usuario.email),
+        subtitle: Text(usuario.correo),
         leading: CircleAvatar(
           backgroundColor: Color.fromARGB(221, 20, 23, 221),
           child: Text(usuario.nombre.substring(0,2), style: TextStyle(color: Colors.white)),

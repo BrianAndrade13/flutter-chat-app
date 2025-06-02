@@ -1,4 +1,8 @@
+
+import 'package:chat_app/helpers/mostrar_alerta.dart';
+import 'package:chat_app/services/auth_services.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../widgets/widgets.dart';
 
@@ -37,7 +41,7 @@ class LoginPages extends StatelessWidget {
   
 
   class _Form extends StatefulWidget {
-    const _Form({super.key});
+    const _Form();
   
     @override
     State<_Form> createState() => __FormState();
@@ -50,6 +54,10 @@ class LoginPages extends StatelessWidget {
 
     @override
     Widget build(BuildContext context) {
+
+
+      final authService = Provider.of<AuthService>(context);
+
       return Container(
         margin: EdgeInsets.only(top: 40),
         padding: EdgeInsets.symmetric(horizontal: 50),
@@ -70,10 +78,27 @@ class LoginPages extends StatelessWidget {
           isPassword: true,
           ),
   
-            BotonAzul(text: 'Ingrese', onPressed: () {
-              print(emailCtrl.text);
-              print(passwordCtrl.text);
-              },)
+            authService.autenticando
+            ? BotonAzul(text: 'Ingrese', onPressed:null)
+            : BotonAzul(
+                text: 'Ingrese',
+                onPressed: () async {
+                  FocusScope.of(context).unfocus();
+                  final loginOk = await authService.login(
+                    emailCtrl.text.trim(),
+                    passwordCtrl.text.trim(),
+                  );
+
+                  if(loginOk){
+                    //TODO: Conectar a nuestro Socket Server
+                    Navigator.pushReplacementNamed(context, 'usuarios');
+                  } else {
+                    //Mostrar alerta
+                    mostrarAlerta(context, 'Login No Encontrado', 'Revise sus credenciales Nuevamente', Colors.white);
+                  }
+                }, 
+                background: Colors.blue,
+              ),
           ],
         ),
       );
