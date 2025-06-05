@@ -3,6 +3,7 @@ import 'package:chat_app/services/auth_services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../services/socket_service.dart';
 import '../widgets/widgets.dart';
 
 class RegisterPages extends StatelessWidget {
@@ -56,6 +57,7 @@ class RegisterPages extends StatelessWidget {
     Widget build(BuildContext context) {
 
       final authServices = Provider.of<AuthService>(context);
+      final socketService = Provider.of<SocketService>(context);
 
       return Container(
         margin: EdgeInsets.only(top: 40),
@@ -90,7 +92,7 @@ class RegisterPages extends StatelessWidget {
               final registerOk = await authServices.register(nameCtrl.text.trim(), emailCtrl.text.trim(), passwordCtrl.text.trim());
               
               if(registerOk == true){
-                //TODO: Conectar al Socket Server
+                socketService.connect();
                 Navigator.pushReplacementNamed(context, 'usuarios');
               } else {
                 mostrarAlerta(context, 'Usuario Ya Registrado', 'El Usuario ya esta Registrad', Colors.white);

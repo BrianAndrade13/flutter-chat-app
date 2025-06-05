@@ -1,6 +1,7 @@
 
 import 'package:chat_app/helpers/mostrar_alerta.dart';
 import 'package:chat_app/services/auth_services.dart';
+import 'package:chat_app/services/socket_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -57,6 +58,7 @@ class LoginPages extends StatelessWidget {
 
 
       final authService = Provider.of<AuthService>(context);
+      final socketService = Provider.of<SocketService>(context);
 
       return Container(
         margin: EdgeInsets.only(top: 40),
@@ -90,7 +92,7 @@ class LoginPages extends StatelessWidget {
                   );
 
                   if(loginOk){
-                    //TODO: Conectar a nuestro Socket Server
+                    socketService.connect();
                     Navigator.pushReplacementNamed(context, 'usuarios');
                   } else {
                     //Mostrar alerta

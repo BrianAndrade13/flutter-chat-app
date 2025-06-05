@@ -95,6 +95,47 @@ class AuthService with ChangeNotifier {
 
   }
 
+// Future<bool> isLoggedIn() async {
+//   try {
+//     final token = await _storage.read(key: 'token');
+//     print('Token actual: $token');
+
+//     if (token == null) return false;
+
+//     final resp = await http.get(
+//       Uri.parse('${Enviroment.apiUrl}/login/renew'),
+//       headers: {
+//         'Content-Type': 'application/json',
+//         'x-token': token
+//       },
+//     );
+
+//     print('Renovar token status: ${resp.statusCode}');
+//     print('Renovar token body: ${resp.body}');
+
+//     if (resp.statusCode == 200 && resp.body.isNotEmpty) {
+//       final Map<String, dynamic> decoded = jsonDecode(resp.body);
+
+//       if (decoded['usuario'] == null) {
+//         print('Usuario es null, token inválido o inconsistente');
+//         await logout();
+//         return false;
+//       }
+
+//       final loginResponse = loginResponseFromJson(resp.body);
+//       this.usuario = loginResponse.usuario;
+//       await _guardarToken(loginResponse.token);
+//       return true;
+//     } else {
+//       await logout();
+//       return false;
+//     }
+//   } catch (e) {
+//     print('Error en isLoggedIn: $e');
+//     return false;
+//   }
+// }
+
 Future<bool> isLoggedIn() async {
   try {
     final token = await _storage.read(key: 'token');

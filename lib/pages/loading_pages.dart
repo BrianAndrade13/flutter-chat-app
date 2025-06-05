@@ -2,6 +2,8 @@ import 'package:chat_app/services/auth_services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../services/socket_service.dart';
+
 class LoadingPage extends StatefulWidget {
   @override
   _LoadingPageState createState() => _LoadingPageState();
@@ -39,61 +41,62 @@ void initState() {
     super.dispose();
   }
 
-  @override
+@override
 Widget build(BuildContext context) {
   return Scaffold(
     backgroundColor: Colors.black,
-    body: FutureBuilder(
-      future: checkLoginState(context), 
-      builder: (context, snapshot) {
-        return FadeTransition(
-        opacity: _fadeAnimation,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Spacer(),
-            Center(
-              child: Image.asset(
-                'assets/tag-logo.png',
-                width: 130,
-                height: 130,
-              ),
+    body: FadeTransition(
+      opacity: _fadeAnimation,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Spacer(),
+          Center(
+            child: Image.asset(
+              'assets/tag-logo.png',
+              width: 130,
+              height: 130,
             ),
-            Spacer(),
-            Column(
-              children: [
-                Text(
-                  "Made In",
-                  style: TextStyle(color: Colors.white70, fontSize: 14),
-                ),
-                SizedBox(height: 10),
-                Image.asset(
-                  'assets/logo.png', 
-                  width: 90,
-                  height: 90,
-                ),
-                SizedBox(height: 20),
-                ],
-              )
-            ],
           ),
-        );
-       }, 
-     ),
-   );
-  }
+          Spacer(),
+          Column(
+            children: [
+              Text(
+                "Made In",
+                style: TextStyle(color: Colors.white70, fontSize: 14),
+              ),
+              SizedBox(height: 10),
+              Image.asset(
+                'assets/logo.png',
+                width: 90,
+                height: 90,
+              ),
+              SizedBox(height: 20),
+            ],
+          )
+        ],
+      ),
+    ),
+  );
+}
+
 
  Future checkLoginState(BuildContext context) async {
   final authService = Provider.of<AuthService>(context, listen: false);
+  final socketService = Provider.of<SocketService>(context, listen: false);
+
+
   final autenticado = await authService.isLoggedIn();
 
   await Future.delayed(Duration(milliseconds: 1500));
 
   if (autenticado) {
-    Navigator.pushReplacementNamed(context, 'usuarios');
-  } else {
-    Navigator.pushReplacementNamed(context, 'login');
-  }
+  socketService.connect();
+  Navigator.pushReplacementNamed(context, 'usuarios');
+} else {
+  Navigator.pushReplacementNamed(context, 'login');
+}
+
  }
 }
 
